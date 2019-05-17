@@ -1,30 +1,65 @@
 "use strict"
 
+const proxy = 'http://localhost:3000';
+
 function getAttractions() {
-    const URL = 'https://touringplans.com/magic-kingdom/attractions.json';
+    const URL = `${proxy}/https://touringplans.com/magic-kingdom/attractions.json`;
     const requestHeaders = {
-            method: 'GET',
-            mode: 'cors',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-    }
+            method: 'GET'
+        }
 
     const request = new Request(URL, requestHeaders);
 
     get(request)
-    .then((response) => {
-        addItem(response);
+    .then(response => {
+        addAttractionsToList(response);
     });
 }
 
-function addItem(item) {
+function addAttractionsToList(items) {
     const attractionsList = document.getElementById('attractionsList');
     
-    const attractionItem = document.createElement('li');
-    attractionItem.textContent = item.name;
-    
-    attractionsList.append(attractionItem);
+    items.map((item) => {
+        const attractionItem = document.createElement('li');
+        const attractionLink = document.createElement('a');
+        attractionLink.setAttribute('href', `https://touringplans.com/magic-kingdom/attractions/${item.permalink}.json`);
+        attractionLink.textContent = item.name;
+        attractionItem.append(attractionLink);
+        
+        attractionsList.append(attractionItem);
+    })
 }
 
-getAttractions();
+function getAttractionInfo(attraction) {
+    const URL = `${proxy}/${attraction.href}`;
+
+    get(URL)
+    .then(response => {
+        const attractionInfo = document.createElement('p');
+        const openDate = new Date(response.opened_on);
+        const attractionText = `${response.name} opened on ${openDate.toLocaleDateString("en-US")}`;
+        attractionInfo.textContent = attractionText;
+
+        attraction.parentNode.append(attractionInfo);
+    })
+}
+
+document.addEventListener('click',function(e){
+    if(e.target && e.target.href !== undefined) { 
+        e.preventDefault();
+        getAttractionInfo(e.target);
+    }
+});
+
+const clickMe = document.getElementById('clickMe');
+const hideMe = document.getElementById('hideMe');
+
+clickMe.addEventListener('click', function(e){
+    e.preventDefault;
+
+    if (hideMe.style.display === 'none') {
+        hideMe.style.display = 'block'
+    } else {
+        hideMe.style.display = 'none'
+    }
+})
