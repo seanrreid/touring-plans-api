@@ -1,6 +1,6 @@
 "use strict"
 
-const proxy = 'http://localhost:3000';
+const proxy = 'http://my-little-cors-proxy.herokuapp.com/';
 
 function getAttractions() {
     const URL = `${proxy}/https://touringplans.com/magic-kingdom/attractions.json`;
@@ -31,7 +31,7 @@ function addAttractionsToList(items) {
 }
 
 function getAttractionInfo(attraction) {
-    const URL = `${proxy}/${attraction.href}`;
+    const URL = `${proxy}${attraction.href}`;
 
     get(URL)
     .then(response => {
