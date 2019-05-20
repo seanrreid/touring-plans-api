@@ -3,7 +3,7 @@
 const proxy = 'http://my-little-cors-proxy.herokuapp.com/';
 
 function getAttractions() {
-    const URL = `${proxy}/https://touringplans.com/magic-kingdom/attractions.json`;
+    const URL = `${proxy}https://touringplans.com/magic-kingdom/attractions.json`;
     const requestHeaders = {
             method: 'GET'
         }
